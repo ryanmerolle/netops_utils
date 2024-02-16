@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "netops-utils"
+version = "0.1.0"
+description = "A collection of NetOps utility scripts leveraging typer"
+homepage = "https://github.com/ryanmerolle/netops-utils"
+documentation = "https://github.com/ryanmerolle/netops-utils"
+authors = ["Ryan Merolle"]
+readme = "README.md"
+packages = [{include = "src"}]
+keywords = ["fortios", "python"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.9",
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+colorlog = "*"
+rich = "*"
+typer = {extras = ["all"], version = "*"}
+
+[tool.poetry.scripts]
+netops-utils = "src.main:app"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+python_version = "3.10"
+
+[tool.isort]
+profile = "black"
+
+#https://docs.astral.sh/ruff/formatter/black/
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.mccabe]
+# Target max-complexity=10
+max-complexity = 33
+
+[tool.ruff]
+line-length = 120

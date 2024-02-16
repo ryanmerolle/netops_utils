@@ -1,2 +1,3 @@
-# netops_utils
-A collection of NetOps utility scripts leverage typer
+# netops-utils
+
+A collection of NetOps utility scripts leveraging typer

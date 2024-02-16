@@ -1,0 +1,31 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "DiogoNolasco.pyinit",
+    "GSGBen.fortigate-fortios-syntax",
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    "GitHub.copilot-labs",
+    "GitHub.vscode-codeql",
+    "GitHub.vscode-github-actions",
+    "GitHub.vscode-pull-request-github",
+    "Gruntfuggly.todo-tree",
+    "KevinRose.vsc-python-indent",
+    "SonarSource.sonarlint-vscode",
+    "Tyriar.sort-lines",
+    "charliermarsh.ruff",
+    "esbenp.prettier-vscode",
+    "hbenl.vscode-test-explorer",
+    "matangover.mypy",
+    "ms-python.black-formatter",
+    "ms-python.flake8",
+    "ms-python.isort",
+    "ms-python.mypy-type-checker",
+    "ms-python.pylint",
+    "mutantdino.resourcemonitor",
+    "paulomenezes.duplicated-code",
+    "piotrpalarz.vscode-gitignore-generator",
+    "sourcery.sourcery",
+    "yzhang.markdown-all-in-one"
+  ]
+}
