@@ -1,0 +1,6 @@
+service_name,host,port
+Jira-HTTPS-NUM,jira.com,443
+Jira-SSH-NUM,jira.com,22
+Jira-HTTPS-NAME,jira.com,HTTPS
+Jira-SSH-NAME,jira.com,SSH
+Jira-SSH-NAME,jira.com,UNKNOWN

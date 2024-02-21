@@ -16,6 +16,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.9"
 colorlog = "*"
+netutils = "*"
 rich = "*"
 typer = {extras = ["all"], version = "*"}
 
