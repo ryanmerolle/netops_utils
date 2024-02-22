@@ -157,7 +157,7 @@ def read_from_csv(file_path: str) -> tuple:
     """
     Reads data from a CSV file and returns it as a list of dictionaries.
     """
-    with open(file_path, mode="r", encoding="utf-8") as csvfile:
+    with open(file_path, mode="r", encoding="utf-8-sig") as csvfile:
         csv_reader = csv.DictReader(csvfile)
         return list(csv_reader.fieldnames or []), list(csv_reader)
 
