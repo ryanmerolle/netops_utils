@@ -39,4 +39,4 @@ def megalinter(ctx):
 @task
 def test(ctx):
     install_app(ctx)
-    ctx.run("netops-utils tcp-checker tests/services.csv -v")
+    ctx.run("netops-utils tcp-checker tests/services.csv -v -pt")

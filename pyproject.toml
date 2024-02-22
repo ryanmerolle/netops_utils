@@ -7,7 +7,7 @@ documentation = "https://github.com/ryanmerolle/netops-utils"
 authors = ["Ryan Merolle"]
 readme = "README.md"
 packages = [{include = "src"}]
-keywords = ["fortios", "python"]
+keywords = ["network", "netops", "python"]
 classifiers = [
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3.9",
