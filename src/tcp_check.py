@@ -59,7 +59,10 @@ async def check_port(service: dict, logging, semaphore: asyncio.Semaphore, durat
             port_number = int(get_tcp_num_from_name(port))
             if port_number == 0:
                 status = "UNKNOWN PORT"
-                logging.info(f"{status} - {service['service_name']} - {host}:{port}")
+                if service['service_name'] != "":
+                     logging.info(f"{status} - {service['service_name']} - {host}:{port}")
+                else:
+                    logging.info(f"{status} - {host}:{port}")
                 return service, status
 
         try:
@@ -75,7 +78,10 @@ async def check_port(service: dict, logging, semaphore: asyncio.Semaphore, durat
             status = f"FAILURE - Error: {e}"
             await asyncio.sleep(delay)
 
-        logging.info(f"{status} - {service['service_name']} - {host}:{port}")
+        if service['service_name'] != "":
+             logging.info(f"{status} - {service['service_name']} - {host}:{port}")
+        else:
+            logging.info(f"{status} - {host}:{port}")
         return service, status
 
 
@@ -111,9 +117,7 @@ def build_results_dict(
         except ValueError:
             port_number = get_tcp_num_from_name(port)
             port_name = port
-        latest_results.append(
-            {
-                "service_name": service["service_name"],
+            result = {
                 "host": service["host"],
                 "ip": ip,
                 "port_name": port_name,
@@ -121,7 +125,9 @@ def build_results_dict(
                 "result": status,
                 "timestamp": timestamp,
             }
-        )
+            if service["service_name"] != "":
+                 result.[service_name]: service["service_name"]
+            latest_results.append(result)
 
     if print_json:
         pretty_print(latest_results, is_json=True)
