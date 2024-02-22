@@ -36,12 +36,13 @@ LOG_FILE = "tcp_checker.log"
 app = typer.Typer()
 
 
-async def check_port(service: dict, logging, duration=1, delay=1) -> Tuple[dict, str]:
+async def check_port(service: dict, logging, semaphore: asyncio.Semaphore, duration=1, delay=1) -> Tuple[dict, str]:
     """
     Asynchronously checks the availability of a TCP port for a given service.
 
     Args:
         service (dict): A dictionary containing service details including service_name, host, and port.
+        semaphore (asyncio.Semaphore): A semaphore to limit the number of concurrent tasks.
         duration (int, optional): The duration within which the port check should be completed. Defaults to 1 second.
         delay (int, optional): The delay before retrying in case of failure. Defaults to 1 second.
 
@@ -49,32 +50,33 @@ async def check_port(service: dict, logging, duration=1, delay=1) -> Tuple[dict,
         tuple: Returns a tuple containing the service dictionary and the status string:
         ("SUCCESS", "TIMEOUT", "REFUSED", or "FAILURE").
     """
-    host = service["host"]
-    port = service["port"]
-    try:
-        port_number = int(port)
-    except ValueError:
-        port_number = int(get_tcp_num_from_name(port))
-        if port_number == 0:
-            status = "UNKNOWN PORT"
-            logging.info(f"{status} - {service['service_name']} - {host}:{port}")
-            return service, status
+    async with semaphore:  # Use the semaphore to limit concurrency
+        host = service["host"]
+        port = service["port"]
+        try:
+            port_number = int(port)
+        except ValueError:
+            port_number = int(get_tcp_num_from_name(port))
+            if port_number == 0:
+                status = "UNKNOWN PORT"
+                logging.info(f"{status} - {service['service_name']} - {host}:{port}")
+                return service, status
 
-    try:
-        await asyncio.wait_for(
-            asyncio.open_connection(host, port_number), timeout=duration
-        )
-        status = "SUCCESS"
-    except asyncio.TimeoutError:
-        status = "TIMEOUT"
-    except ConnectionRefusedError:
-        status = "REFUSED"
-    except Exception as e:
-        status = f"FAILURE - Error: {e}"
-        await asyncio.sleep(delay)
+        try:
+            await asyncio.wait_for(
+                asyncio.open_connection(host, port_number), timeout=duration
+            )
+            status = "SUCCESS"
+        except asyncio.TimeoutError:
+            status = "TIMEOUT"
+        except ConnectionRefusedError:
+            status = "REFUSED"
+        except Exception as e:
+            status = f"FAILURE - Error: {e}"
+            await asyncio.sleep(delay)
 
-    logging.info(f"{status} - {service['service_name']} - {host}:{port}")
-    return service, status
+        logging.info(f"{status} - {service['service_name']} - {host}:{port}")
+        return service, status
 
 
 def build_results_dict(
@@ -140,20 +142,15 @@ async def async_main(
     print_json: bool,
     print_table: bool,
     timestamp: str,
+    concurrency: int,  # Add concurrency parameter
 ):
-    """
-    The main asynchronous function to check ports and handle results.
-
-    Args:
-        file_name (str): The name of the CSV file containing the services to check.
-        verbose (bool): A flag to set verbose logging.
-        json_file (bool): A flag to enable writing results to a JSON file.
-    """
     logging = setup_logging(verbose, log_file, syslog_target)
 
     headers, services = read_from_csv(file_name)
 
-    tasks = [check_port(service, logging) for service in services]
+    semaphore = asyncio.Semaphore(concurrency)  # Create a semaphore with the concurrency limit
+
+    tasks = [check_port(service, logging, semaphore) for service in services]
     results = await asyncio.gather(*tasks)
 
     new_header = timestamp
@@ -172,6 +169,9 @@ async def async_main(
 
 @app.command()
 def main(
+    concurrency: int = typer.Option(
+        100, "--concurrency", "-c", help="The maximum number of concurrent checks.", min=1, max=1000
+    ),  # Add concurrency option
     file_name: Annotated[str, typer.Argument()] = INPUT_FILE,
     log_file: str = typer.Option(
         LOG_FILE, "--export_log_file", "-el", help="Outputs logs to a log file."
@@ -214,6 +214,7 @@ def main(
             print_json,
             print_table,
             get_current_timestamp(use_utc),
+            concurrency,  # Pass the concurrency limit to async_main
         )
     )
 

@@ -34,3 +34,9 @@ def black(ctx):
 @task
 def megalinter(ctx):
     ctx.run("docker run -v $(pwd):/tmp/lint nvuillam/mega-linter")
+
+
+@task
+def test(ctx):
+    install_app(ctx)
+    ctx.run("netops-utils tcp-checker tests/services.csv -v")
