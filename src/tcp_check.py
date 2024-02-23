@@ -126,7 +126,7 @@ def build_results_dict(
                 "timestamp": timestamp,
             }
             if service["service_name"] != "":
-                 result.[service_name]: service["service_name"]
+                 result.[service_name] = service["service_name"]
             latest_results.append(result)
 
     if print_json:
