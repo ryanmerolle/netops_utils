@@ -59,16 +59,14 @@ async def check_port(service: dict, logging, semaphore: asyncio.Semaphore, durat
             port_number = int(get_tcp_num_from_name(port))
             if port_number == 0:
                 status = "UNKNOWN PORT"
-                if service['service_name'] != "":
-                     logging.info(f"{status} - {service['service_name']} - {host}:{port}")
+                if service["service_name"] != "":
+                    logging.info(f"{status} - {service['service_name']} - {host}:{port}")
                 else:
                     logging.info(f"{status} - {host}:{port}")
                 return service, status
 
         try:
-            await asyncio.wait_for(
-                asyncio.open_connection(host, port_number), timeout=duration
-            )
+            await asyncio.wait_for(asyncio.open_connection(host, port_number), timeout=duration)
             status = "SUCCESS"
         except asyncio.TimeoutError:
             status = "TIMEOUT"
@@ -78,8 +76,8 @@ async def check_port(service: dict, logging, semaphore: asyncio.Semaphore, durat
             status = f"FAILURE - Error: {e}"
             await asyncio.sleep(delay)
 
-        if service['service_name'] != "":
-             logging.info(f"{status} - {service['service_name']} - {host}:{port}")
+        if service["service_name"] != "":
+            logging.info(f"{status} - {service['service_name']} - {host}:{port}")
         else:
             logging.info(f"{status} - {host}:{port}")
         return service, status
@@ -126,7 +124,7 @@ def build_results_dict(
                 "timestamp": timestamp,
             }
             if service["service_name"] != "":
-                 result.[service_name] = service["service_name"]
+                result["service_name"] = service["service_name"]
             latest_results.append(result)
 
     if print_json:
@@ -166,9 +164,7 @@ async def async_main(
     for service, status in results:
         service[new_header] = status
 
-    build_results_dict(
-        results, new_header, file_name, print_json, json_file, print_table, timestamp
-    )
+    build_results_dict(results, new_header, file_name, print_json, json_file, print_table, timestamp)
     write_to_csv(file_name, headers, services)
     logging.info("COMPLETED - TCP-CHECKER")
 
@@ -176,36 +172,31 @@ async def async_main(
 @app.command()
 def main(
     concurrency: int = typer.Option(
-        100, "--concurrency", "-c", help="The maximum number of concurrent checks.", min=1, max=1000
+        100,
+        "--concurrency",
+        "-c",
+        help="The maximum number of concurrent checks.",
+        min=1,
+        max=1000,
     ),  # Add concurrency option
     file_name: Annotated[str, typer.Argument()] = INPUT_FILE,
-    log_file: str = typer.Option(
-        LOG_FILE, "--export_log_file", "-el", help="Outputs logs to a log file."
-    ),
+    log_file: str = typer.Option(LOG_FILE, "--export_log_file", "-el", help="Outputs logs to a log file."),
     json_file: bool = typer.Option(
         False,
         "--export_json_file",
         "-ej",
         help="Outputs results to a JSON file in a directory using the name of the input file.",
     ),
-    print_json: bool = typer.Option(
-        False, "--print_json", "-pj", help="Outputs JSON results to stdout."
-    ),
-    print_table: bool = typer.Option(
-        False, "--print_table", "-pt", help="Outputs pretty table results to stdout."
-    ),
+    print_json: bool = typer.Option(False, "--print_json", "-pj", help="Outputs JSON results to stdout."),
+    print_table: bool = typer.Option(False, "--print_table", "-pt", help="Outputs pretty table results to stdout."),
     syslog_target: str = typer.Option(
         "",
         "--syslog",
         "-s",
         help="Sends logs to a syslog host(IP or FQDN). Port can be provided with a :).",
     ),
-    use_utc: bool = typer.Option(
-        False, "--utc-time", "-u", help="Enables UTC time for the timestamp."
-    ),
-    verbose: bool = typer.Option(
-        False, "--verbose", "-v", help="Enables verbose logging to stdout."
-    ),
+    use_utc: bool = typer.Option(False, "--utc-time", "-u", help="Enables UTC time for the timestamp."),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Enables verbose logging to stdout."),
 ):
     """
     Runs the TCP port check.

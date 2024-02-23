@@ -9,7 +9,7 @@ import logging.handlers
 import os
 import re
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict
 
 from colorlog import ColoredFormatter
 from netutils import dns, ip, protocol_mapper
@@ -35,9 +35,7 @@ class RegexColoredFormatter(ColoredFormatter):
 
     def __init__(self, patterns_colors: Dict[str, str], *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.patterns_colors = {
-            re.compile(pattern): color for pattern, color in patterns_colors.items()
-        }
+        self.patterns_colors = {re.compile(pattern): color for pattern, color in patterns_colors.items()}
 
     def format(self, record: logging.LogRecord) -> str:
         original_message = record.msg
@@ -57,9 +55,7 @@ def get_ip_address(fqdn: str) -> str:
     return dns.fqdn_to_ip(fqdn)
 
 
-def setup_logging(
-    verbose: bool, log_file_name: str, syslog: str = "", use_utc: bool = False
-) -> logging.Logger:
+def setup_logging(verbose: bool, log_file_name: str, syslog: str = "", use_utc: bool = False) -> logging.Logger:
     """
     Sets up the logging system with custom formatting based on regex patterns.
     Writes logs to local disk and optionally to a remote syslog server.
@@ -94,17 +90,13 @@ def setup_logging(
 
     # File handler
     file_handler = logging.FileHandler(log_file_name)
-    file_handler.setFormatter(
-        logging.Formatter("%(asctime)s - %(levelname)-8s - %(message)s")
-    )
+    file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)-8s - %(message)s"))
     logger.addHandler(file_handler)
 
     if syslog:
         address, port = syslog.split(":")
         syslog_handler = logging.handlers.SysLogHandler(address=(address, int(port)))
-        syslog_handler.setFormatter(
-            logging.Formatter("%(name)s: %(levelname)s %(message)s")
-        )
+        syslog_handler.setFormatter(logging.Formatter("%(name)s: %(levelname)s %(message)s"))
         logger.addHandler(syslog_handler)
 
     logging.info("STARTED - TCP-CHECKER")
