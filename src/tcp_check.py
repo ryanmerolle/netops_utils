@@ -147,7 +147,7 @@ async def async_main(
     print_table: bool,
     timestamp: str,
     concurrency: int,  # Add concurrency parameter
-):
+) -> None:
     logging = setup_logging(verbose, log_file, syslog_target)
 
     headers, services = read_from_csv(file_name)
@@ -197,7 +197,7 @@ def main(
     ),
     use_utc: bool = typer.Option(False, "--utc-time", "-u", help="Enables UTC time for the timestamp."),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Enables verbose logging to stdout."),
-):
+) -> None:
     """
     Runs the TCP port check.
     """

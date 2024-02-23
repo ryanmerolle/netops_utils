@@ -9,7 +9,7 @@ import logging.handlers
 import os
 import re
 from datetime import datetime
-from typing import Dict
+from typing import Dict, Tuple
 
 from colorlog import ColoredFormatter
 from netutils import dns, ip, protocol_mapper
@@ -145,7 +145,7 @@ def write_to_csv(file_path: str, headers: list, data: list) -> None:
     logging.info(f"Data written to CSV file: {file_path}")
 
 
-def read_from_csv(file_path: str) -> tuple:
+def read_from_csv(file_path: str) -> Tuple[list, list]:
     """
     Reads data from a CSV file and returns it as a list of dictionaries.
     """
