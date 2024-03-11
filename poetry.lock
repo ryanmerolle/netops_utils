@@ -79,13 +79,13 @@ files = [
 
 [[package]]
 name = "netutils"
-version = "1.6.0"
+version = "1.7.0"
 description = "Common helper functions useful in network automation."
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "netutils-1.6.0-py3-none-any.whl", hash = "sha256:e755e6141d0968f1deeb61693a4023f4f5fe1f0dde25d94ac1008f8191d8d237"},
-    {file = "netutils-1.6.0.tar.gz", hash = "sha256:bd2fa691e172fe9d5c9e6fc5e2593316eb7fd2c36450454894ed13b274763d70"},
+    {file = "netutils-1.7.0-py3-none-any.whl", hash = "sha256:ad2e65d2e5bb7cf857faeee96f03b8823782c509cb003f2e4e86cccf5b0a3328"},
+    {file = "netutils-1.7.0.tar.gz", hash = "sha256:e0f461092e02c03166a6830706377dfe079b661ad9e41940f265424121621dc8"},
 ]
 
 [package.extras]
